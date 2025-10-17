@@ -8,11 +8,15 @@ set -e
 CURRENT_DIR=$(dirname "$0")
 SCRIPT_DIR="/tmp/preflight"
 mkdir -p ${SCRIPT_DIR}
-if [ -f "${CURRENT_DIR}/requirements.txt" ]; then
-  cp "${CURRENT_DIR}/requirements.txt" "${SCRIPT_DIR}/requirements.txt"
+echo "Downloading requirements.txt from GitHub..."
+if ! curl -sSfo "${SCRIPT_DIR}/requirements.txt" "https://raw.githubusercontent.com/xzhaosg/gke-tools/refs/heads/main/requirements.txt"; then
+  echo "Failed to download requirements.txt. Please check network or URL."
+  exit 1
 fi
-if [ -f "${CURRENT_DIR}/preflight.py" ]; then
-  cp "${CURRENT_DIR}/preflight.py" "${SCRIPT_DIR}/preflight.py"
+echo "Downloading preflight.py from GitHub..."
+if ! curl -sSfo "${SCRIPT_DIR}/preflight.py" "https://raw.githubusercontent.com/xzhaosg/gke-tools/refs/heads/main/preflight.py"; then
+  echo "Failed to download preflight.py. Please check network or URL."
+  exit 1
 fi
 
 VENV_DIR="${SCRIPT_DIR}/venv"
